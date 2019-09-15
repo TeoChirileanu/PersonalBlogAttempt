@@ -2,11 +2,13 @@ trigger:
 - master
 
 pool:
-  vmImage: 'ubuntu-latest'
-
-variables:
-  buildConfiguration: "Release"
+  vmImage: 'windows-latest'
 
 steps:
-- script: dotnet build --configutation $(buildConfiguration)
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '3.0.100-preview9-014004'
+    includePreviewVersions: true
+- script: dotnet build
   displayName: 'Build'
