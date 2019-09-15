@@ -15,15 +15,17 @@ steps:
   displayName: 'Building...'
   inputs:
     command: 'build'
+    arguments: '--verbosity:quiet'
 - task: DotNetCoreCLI@2
   displayName: 'Publishing...'
   inputs:
     command: 'publish'
+    arguments: '--output $(Build.ArtifactStagingDirectory) --verbosity:quiet'
     publishWebProjects: true
     zipAfterPublish: false
 - task: PublishBuildArtifacts@1
   displayName: 'Copying artifacts...'
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    artifactName: 'Binaries'
+    publishLocation: Container
