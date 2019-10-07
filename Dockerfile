@@ -1,17 +1,14 @@
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.0-buster-slim AS base
-WORKDIR /app
-EXPOSE 80
-EXPOSE 443
-
 FROM mcr.microsoft.com/dotnet/core/sdk:3.0-buster AS build
 WORKDIR /src
+COPY Blog.csproj .
+RUN dotnet restore "Blog.csproj"
 COPY . .
-RUN dotnet build "Blog.csproj" -o /app/build
+RUN dotnet build "Blog.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Blog.csproj" -o /app/publish
+RUN dotnet publish "Blog.csproj" -c Release -o /app/publish
 
-FROM base AS final
-WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Blog.dll"]
+FROM nginx:alpine AS final
+WORKDIR /usr/share/nginx/html
+COPY --from=publish /app/publish/Blog/dist .
+COPY nginx.conf /etc/nginx/nginx.conf
