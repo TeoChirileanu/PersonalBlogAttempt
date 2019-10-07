@@ -6,10 +6,10 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/core/sdk:3.0-buster AS build
 WORKDIR /src
 COPY . .
-RUN dotnet build "Blog.csproj" -c Release -o /app/build
+RUN dotnet build "Blog.csproj" -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Blog.csproj" -c Release -o /app/publish
+RUN dotnet publish "Blog.csproj" -o /app/publish
 
 FROM base AS final
 WORKDIR /app
