@@ -9,6 +9,6 @@ namespace Blog.Entities
         public string Author { get; set; }
         public DateTime PostDate { get; set; }
         public string Content { get; set; }
-        public string Summary => Content.Substring(0, 50); // todo: replace last character by ...
+        public string Summary => Content.Substring(0, Content.Length < 50 ? Content.Length : 50); // todo: replace last character by ...
     }
 }
