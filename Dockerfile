@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:3.0-buster AS build
 WORKDIR /src
-COPY Blog.csproj .
+COPY src\Blog.csproj .
 RUN dotnet restore "Blog.csproj"
 COPY . .
 RUN dotnet build "Blog.csproj" -c Release -o /app/build
