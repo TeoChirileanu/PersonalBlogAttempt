@@ -1,0 +1,41 @@
+﻿@page "/posts/{Id:int}"
+@using Markdig
+@using Markdig.SyntaxHighlighting
+@layout MainLayout
+
+<div class="container">
+    <p>@Post.Id</p>
+    <br/>
+    <p>@Post.Title</p>
+    <br/>
+    <p>@((MarkupString)Post.Content)</p>
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    public BlogPost Post;
+
+    protected override void OnInitialized()
+    {
+        // todo: take this from persistence
+        Post = new BlogPost
+        {
+            Id = Id,
+            Title = "Title",
+            Content = GetContent()
+        };
+    }
+
+    public string GetContent()
+    {
+        var content = Models.GetContent.GetFileContent();
+        var builder = new MarkdownPipelineBuilder()
+            .UseAdvancedExtensions()
+            .Build();
+        var result = Markdown.ToHtml(content, builder);
+        return result;
+    }
+
+}
