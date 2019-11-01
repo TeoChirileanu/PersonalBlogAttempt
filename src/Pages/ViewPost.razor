@@ -1,6 +1,4 @@
 ﻿@page "/posts/{Id:int}"
-@using Markdig
-@using Markdig.SyntaxHighlighting
 @layout MainLayout
 
 <div class="container">
@@ -19,23 +17,12 @@
 
     protected override void OnInitialized()
     {
-        // todo: take this from persistence
         Post = new BlogPost
         {
             Id = Id,
             Title = "Title",
-            Content = GetContent()
+            Content = "tralala"
         };
-    }
-
-    public string GetContent()
-    {
-        var content = Models.GetContent.GetFileContent();
-        var builder = new MarkdownPipelineBuilder()
-            .UseAdvancedExtensions()
-            .Build();
-        var result = Markdown.ToHtml(content, builder);
-        return result;
     }
 
 }

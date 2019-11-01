@@ -5,7 +5,8 @@
     @foreach (var post in Posts)
     {
     <div>
-        <p>@post.Id</p>
+        <NavLink href="@($"posts/{post.Id}")"></NavLink>
+        <a href="posts/@post.Id">View</a>
         <p>@post.Title</p>
         <p>@post.Content</p>
     </div>

@@ -7,27 +7,33 @@
         <div class="col-md-12">
             <div class="editor">
                 <input @bind=@Title placeholder="Title" class="form-control" />
-                <textarea @bind=@Content placeholder="Content"></textarea>
-                <button class="btn btn-primary float-right" @onclick="@AddBlogPost">Post</button>
+                <textarea rows="50" cols="100" @bind=@RawContent placeholder="Content"></textarea>
+                <button class="btn btn-primary float-right" @onclick="@Add">Post</button>
             </div>
         </div>
     </div>
 </div>
 
-@code {
-    string Title { get; set; }
-    string Content { get; set; }
+@if (ProcessedContent.Value != null && Title != null)
+{
+    <div>
+        <h1>@Title</h1>
+    </div>
+    <br/>
+    <div>
+        @ProcessedContent
+    </div>
+}
 
-    IList<BlogPost> BlogPosts = new List<BlogPost>();
-    // todo: i need to persist this somehow
-    void AddBlogPost()
-    {
-        BlogPosts.Add(new BlogPost
-        {
-            Id = 1,
-            Title = Title,
-            Content = Content
-        });
-        NavigationManager.NavigateTo($"/posts/{BlogPosts[0].Id}");
-    }
+@code {
+    private MarkdownPipeline builder = new MarkdownPipelineBuilder()
+        .UseAdvancedExtensions()
+        .UseFootnotes()
+        .Build();
+
+    private string Title { get; set; }
+    private string RawContent { get; set; }
+    private MarkupString ProcessedContent { get; set; }
+
+    private void Add() => ProcessedContent = (MarkupString) (Markdown.ToHtml(RawContent, builder));
 }
