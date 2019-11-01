@@ -1,5 +1,7 @@
 ﻿@page "/posts/add"
+@using Blazored.LocalStorage
 @inject NavigationManager NavigationManager
+@inject ISyncLocalStorageService Storage
 @layout MainLayout
 
 <div class="container">
@@ -14,6 +16,9 @@
     </div>
 </div>
 
+<div>
+    <button @onclick="@Get">GetProcessedContent</button>
+</div>
 @if (ProcessedContent.Value != null && Title != null)
 {
     <div>
@@ -26,7 +31,8 @@
 }
 
 @code {
-    private MarkdownPipeline builder = new MarkdownPipelineBuilder()
+
+    private MarkdownPipeline Builder = new MarkdownPipelineBuilder()
         .UseAdvancedExtensions()
         .UseFootnotes()
         .Build();
@@ -35,5 +41,16 @@
     private string RawContent { get; set; }
     private MarkupString ProcessedContent { get; set; }
 
-    private void Add() => ProcessedContent = (MarkupString) (Markdown.ToHtml(RawContent, builder));
+    private void Add()
+    {
+        var contentAsHtml = Markdown.ToHtml(RawContent, Builder);
+        Storage.SetItem("content", contentAsHtml);
+
+    }
+
+    private void Get()
+    {
+        var content = Storage.GetItem<string>("content");
+        ProcessedContent = (MarkupString) content;
+    }
 }
